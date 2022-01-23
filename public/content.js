@@ -1,6 +1,8 @@
 const messagesFromReactAppListener = (request, sender, response) => {
   if (request.type === "get") {
     response({ data: main() });
+  } else if (request.type === "getAllSpanText") {
+    response({ data: getAllSpanText() });
   } else {
     console.error("unknown type");
   }
