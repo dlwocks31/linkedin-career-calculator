@@ -3,11 +3,13 @@ import logo from "./logo.svg";
 import "./App.css";
 
 interface ExperienceItem {
+  uuid: string;
   start: YearMonth;
   end: YearMonth;
   added: number;
   duplicate: number;
   prevText: string;
+  isUsed: boolean;
 }
 
 interface YearMonth {
@@ -153,11 +155,13 @@ const getListOfExpStringFromPage = async () => {
       const { start, end } = result;
       const { added, duplicate } = ymc.addDuration(start, end);
       dataArray.push({
+        uuid: i.toString(),
         start,
         end,
         added,
         duplicate,
         prevText: uniqueSpanTexts[i - 1],
+        isUsed: true,
       });
     }
   }
@@ -165,11 +169,18 @@ const getListOfExpStringFromPage = async () => {
   return dataArray;
 };
 
-const ExperienceItemComponent = (props: { experienceItem: ExperienceItem }) => {
+const ExperienceItemComponent = (props: {
+  experienceItem: ExperienceItem;
+  toggleIsUsed: () => void;
+}) => {
   const item = props.experienceItem;
   return (
     <div>
-      <input type="checkbox" />
+      <input
+        type="checkbox"
+        checked={item.isUsed}
+        onClick={props.toggleIsUsed}
+      />
       <span>
         {item.start.year}/{item.start.month} ~ {item.end.year}/{item.end.month}:{" "}
         {item.added}개월
@@ -185,7 +196,9 @@ const ExperienceSummaryComponent = ({
 }: {
   listOfExperienceItem: ExperienceItem[];
 }) => {
-  const sum = listOfExperienceItem.reduce((acc, cur) => acc + cur.added, 0);
+  const sum = listOfExperienceItem
+    .filter((item) => item.isUsed)
+    .reduce((acc, cur) => acc + cur.added, 0);
   return (
     <h3>
       총합 경력: {Math.floor(sum / 12)}년 {sum % 12}개월
@@ -197,17 +210,15 @@ const App = () => {
     ExperienceItem[]
   >([]);
 
-  /**
-   * Get current URL
-   */
-  useEffect(() => {
-    const queryInfo = { active: true, lastFocusedWindow: true };
-
-    chrome.tabs &&
-      chrome.tabs.query(queryInfo, (tabs) => {
-        const url = tabs[0].url || "";
-      });
-  }, []);
+  function handleToggleIsUsed(uuid: string) {
+    const newList = listOfExperienceItem.map((item) => {
+      if (item.uuid == uuid) {
+        item.isUsed = !item.isUsed;
+      }
+      return item;
+    });
+    setListOfExperienceItem(newList);
+  }
 
   const getListOfExpString = async () => {
     const list = await getListOfExpStringFromPage();
@@ -220,7 +231,10 @@ const App = () => {
       <ExperienceSummaryComponent listOfExperienceItem={listOfExperienceItem} />
       <p>----------------------</p>
       {listOfExperienceItem.map((item) => (
-        <ExperienceItemComponent experienceItem={item} />
+        <ExperienceItemComponent
+          experienceItem={item}
+          toggleIsUsed={() => handleToggleIsUsed(item.uuid)}
+        />
       ))}
     </div>
   );
