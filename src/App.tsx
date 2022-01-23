@@ -2,10 +2,39 @@ import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
+interface ResponseItem {
+  start: {
+    year: number;
+    month: number;
+  };
+  end: {
+    year: number;
+    month: number;
+  };
+  added: number;
+  duplicate: number;
+  prevText: string;
+}
+const renderAsViewArray = (dataArray: ResponseItem[]) => {
+  const sum = dataArray.reduce((acc, cur) => acc + cur.added, 0);
+  console.log(dataArray);
+  return [
+    `총합 경력: ${Math.floor(sum / 12)}년 ${sum % 12}개월`,
+    "----------------------------------------",
+    ...dataArray.map(({ start, end, added, duplicate, prevText }) => {
+      console.log(start, end, added, duplicate, prevText);
+      return (
+        `${start.year}/${start.month} ~ ${end.year}/${end.month}: ${added}개월` +
+        (duplicate > 0 ? ` (${duplicate}개월 중복)` : "") +
+        `(${prevText})`
+      );
+    }),
+  ];
+};
 const App = () => {
-  const [url, setUrl] = useState<string>("");
-  const [responseFromContent, setResponseFromContent] =
-    useState<string>("Initial State");
+  const [responseFromContent, setResponseFromContent] = useState<
+    ResponseItem[]
+  >([]);
 
   /**
    * Get current URL
@@ -16,11 +45,10 @@ const App = () => {
     chrome.tabs &&
       chrome.tabs.query(queryInfo, (tabs) => {
         const url = tabs[0].url || "";
-        setUrl(url);
       });
   }, []);
 
-  const sendTestMessage = () => {
+  const getQuery = () => {
     const message = {
       type: "get",
     };
@@ -40,13 +68,10 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hot build</p>
-        <p>{url}</p>
-        <button onClick={sendTestMessage}>SEND MESSAGE</button>
-        <p>{responseFromContent}</p>
-      </header>
+      <button onClick={getQuery}>Get</button>
+      {renderAsViewArray(responseFromContent).map((item) => (
+        <p>{item}</p>
+      ))}
     </div>
   );
 };
