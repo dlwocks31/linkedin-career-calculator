@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-interface ResponseItem {
+interface ExperienceItem {
   start: YearMonth;
   end: YearMonth;
   added: number;
@@ -14,7 +14,7 @@ interface YearMonth {
   year: number;
   month: number;
 }
-const renderAsViewArray = (dataArray: ResponseItem[]) => {
+const renderAsViewArray = (dataArray: ExperienceItem[]) => {
   const sum = dataArray.reduce((acc, cur) => acc + cur.added, 0);
   console.log(dataArray);
   return [
@@ -144,7 +144,7 @@ class YearMonthContainer {
 
 const getListOfExpStringFromPage = async () => {
   const ymc = new YearMonthContainer();
-  const dataArray = [];
+  const dataArray: ExperienceItem[] = [];
   const spanTexts = await getAllSpanTexts();
   const uniqueSpanTexts = uniqueize(spanTexts);
   for (const [i, text] of uniqueSpanTexts.entries()) {
@@ -162,11 +162,40 @@ const getListOfExpStringFromPage = async () => {
     }
   }
   console.log("XXX dataArray is: ", dataArray);
-  return renderAsViewArray(dataArray);
+  return dataArray;
 };
 
+const ExperienceItemComponent = (props: { experienceItem: ExperienceItem }) => {
+  const item = props.experienceItem;
+  return (
+    <div>
+      <input type="checkbox" />
+      <span>
+        {item.start.year}/{item.start.month} ~ {item.end.year}/{item.end.month}:{" "}
+        {item.added}개월
+        {item.duplicate > 0 ? ` (${item.duplicate}개월 중복)` : ""}
+        {item.prevText ? `(${item.prevText})` : ""}
+      </span>
+    </div>
+  );
+};
+
+const ExperienceSummaryComponent = ({
+  listOfExperienceItem,
+}: {
+  listOfExperienceItem: ExperienceItem[];
+}) => {
+  const sum = listOfExperienceItem.reduce((acc, cur) => acc + cur.added, 0);
+  return (
+    <h3>
+      총합 경력: {Math.floor(sum / 12)}년 {sum % 12}개월
+    </h3>
+  );
+};
 const App = () => {
-  const [listOfExpString, setListOfExpString] = useState<string[]>([]);
+  const [listOfExperienceItem, setListOfExperienceItem] = useState<
+    ExperienceItem[]
+  >([]);
 
   /**
    * Get current URL
@@ -182,14 +211,16 @@ const App = () => {
 
   const getListOfExpString = async () => {
     const list = await getListOfExpStringFromPage();
-    setListOfExpString(list);
+    setListOfExperienceItem(list);
   };
 
   return (
     <div className="App">
       <button onClick={getListOfExpString}>Get From Span</button>
-      {listOfExpString.map((item) => (
-        <p>{item}</p>
+      <ExperienceSummaryComponent listOfExperienceItem={listOfExperienceItem} />
+      <p>----------------------</p>
+      {listOfExperienceItem.map((item) => (
+        <ExperienceItemComponent experienceItem={item} />
       ))}
     </div>
   );
