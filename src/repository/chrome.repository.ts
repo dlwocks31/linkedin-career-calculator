@@ -1,4 +1,6 @@
-export class ChromeRepository {
+import { IChromeRepository } from "../service/chrome.interface";
+
+export class ChromeRepository implements IChromeRepository {
   async getAllSpanText(): Promise<string[]> {
     const message = {
       type: "getAllSpanText",
