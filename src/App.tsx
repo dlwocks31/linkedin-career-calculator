@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import { ChromeRepository } from "./repository/chrome.repository";
 
 interface ExperienceItem {
   uuid: string;
@@ -16,41 +17,9 @@ interface YearMonth {
   year: number;
   month: number;
 }
-const renderAsViewArray = (dataArray: ExperienceItem[]) => {
-  const sum = dataArray.reduce((acc, cur) => acc + cur.added, 0);
-  console.log(dataArray);
-  return [
-    `총합 경력: ${Math.floor(sum / 12)}년 ${sum % 12}개월`,
-    "----------------------------------------",
-    ...dataArray.map(({ start, end, added, duplicate, prevText }) => {
-      console.log(start, end, added, duplicate, prevText);
-      return (
-        `${start.year}/${start.month} ~ ${end.year}/${end.month}: ${added}개월` +
-        (duplicate > 0 ? ` (${duplicate}개월 중복)` : "") +
-        `(${prevText})`
-      );
-    }),
-  ];
-};
-const getAllSpanTexts = (): Promise<string[]> => {
-  const message = {
-    type: "getAllSpanText",
-  };
-  const queryInfo: chrome.tabs.QueryInfo = {
-    active: true,
-    currentWindow: true,
-  };
-  return new Promise((resolve) => {
-    chrome.tabs.query(queryInfo, (tabs) => {
-      const tabId: number = tabs[0].id as number;
-      chrome.tabs.sendMessage(tabId, message, (response) => {
-        resolve(response.data);
-      });
-    });
-  });
-};
+
 function parseStringToYearMonth(str: string) {
-  if (str == "현재") {
+  if (str === "현재") {
     return { year: new Date().getFullYear(), month: new Date().getMonth() + 1 };
   }
   const res = str.match(/(\d{4})년 (\d{1,2})월/);
@@ -72,7 +41,7 @@ function enumerateDiffOfTwoYearMonth(
   let year = yearMonthStart.year;
   let month = yearMonthStart.month;
   console.log("XXX enumerateDiffOfTwoYearMonth", yearMonthStart, yearMonthEnd);
-  while (!(year == yearMonthEnd.year && month == yearMonthEnd.month)) {
+  while (!(year === yearMonthEnd.year && month === yearMonthEnd.month)) {
     ls.push(`${year}-${month}`);
     month++;
     if (month > 12) {
@@ -145,9 +114,11 @@ class YearMonthContainer {
 }
 
 const getListOfExpStringFromPage = async () => {
+  const chromeRepository = new ChromeRepository();
+
   const ymc = new YearMonthContainer();
   const dataArray: ExperienceItem[] = [];
-  const spanTexts = await getAllSpanTexts();
+  const spanTexts = await chromeRepository.getAllSpanText();
   const uniqueSpanTexts = uniqueize(spanTexts);
   for (const [i, text] of uniqueSpanTexts.entries()) {
     const result = parseAsDuration(text);
@@ -212,7 +183,7 @@ const App = () => {
 
   function handleToggleIsUsed(uuid: string) {
     const newList = listOfExperienceItem.map((item) => {
-      if (item.uuid == uuid) {
+      if (item.uuid === uuid) {
         item.isUsed = !item.isUsed;
       }
       return item;
