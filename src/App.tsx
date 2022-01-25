@@ -21,7 +21,7 @@ const ExperienceItemComponent = (props: {
         {item.start.year}/{item.start.month} ~ {item.end.year}/{item.end.month}:{" "}
         {item.added}개월
         {item.duplicate > 0 ? ` (${item.duplicate}개월 중복)` : ""}
-        {item.prevText ? `(${item.prevText})` : ""}
+        {item.company ? `(${item.company})` : ""}
       </span>
     </div>
   );
@@ -66,10 +66,13 @@ const App = () => {
     setListOfExperienceItem(await service.getExperienceItems());
   };
 
+  const clearListOfExpItem = () => setListOfExperienceItem([]);
+
   return (
     <div className="App">
       <button onClick={getListOfExpItem}>Get From Span</button>
       <button onClick={getListOfMockExpItem}>Get From Mock</button>
+      <button onClick={clearListOfExpItem}>Clear</button>
       <ExperienceSummaryComponent listOfExperienceItem={listOfExperienceItem} />
       <p>----------------------</p>
       {listOfExperienceItem.map((item) => (

@@ -1,18 +1,5 @@
 import { IChromeRepository } from "./chrome.interface";
-interface ExperienceItem {
-  uuid: string;
-  start: YearMonth;
-  end: YearMonth;
-  added: number;
-  duplicate: number;
-  prevText: string;
-  isUsed: boolean;
-}
-
-interface YearMonth {
-  year: number;
-  month: number;
-}
+import { YearMonth, ExperienceItem } from "./experience-item.interface";
 function uniqueize(ls: string[]) {
   const st = new Set();
   const res = [];
@@ -125,7 +112,7 @@ export class ExperienceItemService {
           end,
           added,
           duplicate,
-          prevText: uniqueSpanTexts[i - 1],
+          company: uniqueSpanTexts[i - 1],
           isUsed: true,
         });
       }
