@@ -3,7 +3,11 @@ import "./App.css";
 import { ChromeRepository } from "./repository/chrome.repository";
 import { ExperienceItemService } from "./service/experience-item.service";
 import { MockChromeRepository } from "./repository/mock-chrome.repository";
-import { ExperienceItem } from "./service/experience-item.interface";
+import {
+  BasicExperienceItem,
+  ExperienceItem,
+} from "./service/experience-item.interface";
+import { experienceItemMapper } from "./helper/experience-item-mapper";
 
 const ExperienceItemComponent = (props: {
   experienceItem: ExperienceItem;
@@ -42,40 +46,42 @@ const ExperienceSummaryComponent = ({
   );
 };
 const App = () => {
-  const [listOfExperienceItem, setListOfExperienceItem] = useState<
-    ExperienceItem[]
+  const [basicExperienceItems, setBasicExperienceItems] = useState<
+    BasicExperienceItem[]
   >([]);
 
   function handleToggleIsUsed(uuid: string) {
-    const newList = listOfExperienceItem.map((item) => {
+    const newList = basicExperienceItems.map((item) => {
       if (item.uuid === uuid) {
         item.isUsed = !item.isUsed;
       }
       return item;
     });
-    setListOfExperienceItem(newList);
+    setBasicExperienceItems(newList);
   }
 
   const getListOfExpItem = async () => {
     const service = new ExperienceItemService(new ChromeRepository());
-    setListOfExperienceItem(await service.getExperienceItems());
+    setBasicExperienceItems(await service.getExperienceItems());
   };
 
   const getListOfMockExpItem = async () => {
     const service = new ExperienceItemService(new MockChromeRepository());
-    setListOfExperienceItem(await service.getExperienceItems());
+    setBasicExperienceItems(await service.getExperienceItems());
   };
 
-  const clearListOfExpItem = () => setListOfExperienceItem([]);
+  const clearListOfExpItem = () => setBasicExperienceItems([]);
 
   return (
     <div className="App">
       <button onClick={getListOfExpItem}>Get From Span</button>
       <button onClick={getListOfMockExpItem}>Get From Mock</button>
       <button onClick={clearListOfExpItem}>Clear</button>
-      <ExperienceSummaryComponent listOfExperienceItem={listOfExperienceItem} />
+      <ExperienceSummaryComponent
+        listOfExperienceItem={experienceItemMapper(basicExperienceItems)}
+      />
       <p>----------------------</p>
-      {listOfExperienceItem.map((item) => (
+      {experienceItemMapper(basicExperienceItems).map((item) => (
         <ExperienceItemComponent
           experienceItem={item}
           toggleIsUsed={() => handleToggleIsUsed(item.uuid)}

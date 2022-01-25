@@ -8,9 +8,11 @@ export interface ExperienceItem {
   isUsed: boolean;
 }
 export interface BasicExperienceItem {
+  uuid: string;
   start: YearMonth;
   end: YearMonth;
   company: string;
+  isUsed: boolean;
 }
 export interface YearMonth {
   year: number;
