@@ -7,6 +7,7 @@ import { experienceItemMapper } from "./helper/experience-item-mapper";
 import { YearMonthInput } from "./component/YearMonthInput";
 import { ExperienceItem } from "./domain/ExperienceItem";
 import { BasicExperienceItem } from "./domain/BasicExperienceItem";
+import { YearMonthPairInput } from "./component/YearMonthPairInput";
 
 const ExperienceItemComponent = (props: {
   experienceItem: ExperienceItem;
@@ -77,7 +78,7 @@ const App = () => {
       <button onClick={getListOfMockExpItem}>Get From Mock</button>
       <button onClick={clearListOfExpItem}>Clear</button>
       <div style={{ display: "flex" }}>
-        <YearMonthInput onChange={(v) => console.log(v)} />
+        <YearMonthPairInput onChange={(v) => console.log(v)} />
       </div>
 
       <ExperienceSummaryComponent
