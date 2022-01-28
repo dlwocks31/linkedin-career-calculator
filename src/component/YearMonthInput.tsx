@@ -8,10 +8,14 @@ export const YearMonthInput = ({
   onChange: (value: YearMonth) => void;
 }) => {
   // input을 controlled component로 만들어야 함. https://reactjs.org/docs/forms.html#controlled-components
-  const [state, setState] = useState<YearMonth>({
+  const [state, setRawState] = useState<YearMonth>({
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
   });
+  const setState = (value: YearMonth) => {
+    setRawState(value);
+    onChange(value);
+  };
   return (
     <span>
       <select
