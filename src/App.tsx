@@ -8,6 +8,7 @@ import {
   ExperienceItem,
 } from "./service/experience-item.interface";
 import { experienceItemMapper } from "./helper/experience-item-mapper";
+import { YearMonthInput } from "./component/YearMonthInput";
 
 const ExperienceItemComponent = (props: {
   experienceItem: ExperienceItem;
@@ -77,6 +78,10 @@ const App = () => {
       <button onClick={getListOfExpItem}>Get From Span</button>
       <button onClick={getListOfMockExpItem}>Get From Mock</button>
       <button onClick={clearListOfExpItem}>Clear</button>
+      <div style={{ display: "flex" }}>
+        <YearMonthInput onChange={(v) => console.log(v)} />
+      </div>
+
       <ExperienceSummaryComponent
         listOfExperienceItem={experienceItemMapper(basicExperienceItems)}
       />
