@@ -1,3 +1,4 @@
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { v4 } from "uuid";
 import { BasicExperienceItem } from "../domain/BasicExperienceItem";
@@ -31,18 +32,24 @@ export const BasicExperienceItemInput = ({
     setState({ ...state, company: "" });
   };
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", padding: "10px" }}>
       <YearMonthPairInput
         onChange={(pair) => setState({ ...state, ...pair })}
-        
       />
-      <input
-        type="text"
+      <TextField
+        size="small"
+        label="회사명(선택)"
+        variant="outlined"
         value={state.company}
         onChange={(e) => setState({ ...state, company: e.target.value })}
-        placeholder="회사명 입력(선택)"
       />
-      <button onClick={checkValidAndSubmit}>제출</button>
+      <Button
+        variant="contained"
+        onClick={checkValidAndSubmit}
+        style={{ margin: "0 3px" }}
+      >
+        경력 추가
+      </Button>
     </div>
   );
 };

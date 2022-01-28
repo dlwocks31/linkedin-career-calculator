@@ -4,33 +4,11 @@ import { ChromeRepository } from "./repository/chrome.repository";
 import { ExperienceItemService } from "./service/experience-item.service";
 import { MockChromeRepository } from "./repository/mock-chrome.repository";
 import { experienceItemMapper } from "./helper/experience-item-mapper";
-import { YearMonthInput } from "./component/YearMonthInput";
 import { ExperienceItem } from "./domain/ExperienceItem";
 import { BasicExperienceItem } from "./domain/BasicExperienceItem";
-import { YearMonthPairInput } from "./component/YearMonthPairInput";
 import { BasicExperienceItemInput } from "./component/BasicExperienceInput";
-
-const ExperienceItemComponent = (props: {
-  experienceItem: ExperienceItem;
-  toggleIsUsed: () => void;
-}) => {
-  const item = props.experienceItem;
-  return (
-    <div>
-      <input
-        type="checkbox"
-        checked={item.isUsed}
-        onClick={props.toggleIsUsed}
-      />
-      <span>
-        {item.start.year}/{item.start.month} ~ {item.end.year}/{item.end.month}:{" "}
-        {item.added}개월
-        {item.duplicate > 0 ? ` (${item.duplicate}개월 중복)` : ""}
-        {item.company ? `(${item.company})` : ""}
-      </span>
-    </div>
-  );
-};
+import { Button, Divider, Typography } from "@mui/material";
+import { ExperienceItemComponent } from "./component/ExperienceItemComponent";
 
 const ExperienceSummaryComponent = ({
   listOfExperienceItem,
@@ -41,9 +19,9 @@ const ExperienceSummaryComponent = ({
     .filter((item) => item.isUsed)
     .reduce((acc, cur) => acc + cur.added, 0);
   return (
-    <h3>
+    <Typography variant="h3">
       총합 경력: {Math.floor(sum / 12)}년 {sum % 12}개월
-    </h3>
+    </Typography>
   );
 };
 const App = () => {
@@ -72,12 +50,26 @@ const App = () => {
   };
 
   const clearListOfExpItem = () => setBasicExperienceItems([]);
-
+  const isTesting = false;
   return (
     <div className="App">
-      <button onClick={getListOfExpItem}>Get From Span</button>
-      <button onClick={getListOfMockExpItem}>Get From Mock</button>
-      <button onClick={clearListOfExpItem}>Clear</button>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <Button
+          variant="contained"
+          onClick={getListOfExpItem}
+          style={{ marginRight: "20px" }}
+        >
+          링크드인 페이지에서 가져오기
+        </Button>
+        {isTesting && (
+          <Button variant="contained" onClick={getListOfMockExpItem}>
+            Get From Mock
+          </Button>
+        )}
+        <Button variant="contained" color="error" onClick={clearListOfExpItem}>
+          초기화
+        </Button>
+      </div>
 
       <BasicExperienceItemInput
         onSubmit={(experienceItem) =>
@@ -89,7 +81,7 @@ const App = () => {
       <ExperienceSummaryComponent
         listOfExperienceItem={experienceItemMapper(basicExperienceItems)}
       />
-      <p>----------------------</p>
+      <Divider style={{ width: "100%", padding: "5px" }} />
       {experienceItemMapper(basicExperienceItems).map((item) => (
         <ExperienceItemComponent
           experienceItem={item}

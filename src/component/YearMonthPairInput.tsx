@@ -1,3 +1,4 @@
+import { FormLabel } from "@mui/material";
 import { useState } from "react";
 import { YearMonth } from "../domain/YearMonth";
 import { YearMonthInput } from "./YearMonthInput";
@@ -18,7 +19,7 @@ export const YearMonthPairInput = ({
   return (
     <div>
       <YearMonthInput onChange={(start) => setState({ ...state, start })} />
-      ~
+      <FormLabel style={{ padding: "3px" }}>~</FormLabel>
       <YearMonthInput onChange={(end) => setState({ ...state, end })} />
     </div>
   );

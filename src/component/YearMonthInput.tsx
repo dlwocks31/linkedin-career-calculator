@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
 
 import _ from "lodash";
 import { YearMonth } from "../domain/YearMonth";
+import { FormLabel, InputLabel, MenuItem, Select } from "@mui/material";
 
 export const YearMonthInput = ({
   onChange,
@@ -19,24 +20,26 @@ export const YearMonthInput = ({
   };
   return (
     <span>
-      <select
+      <Select
+        size="small"
         onChange={(e) => setState({ ...state, year: Number(e.target.value) })}
         value={state.year}
       >
         {_.range(new Date().getFullYear(), 1959, -1).map((year) => {
-          return <option value={year}>{year}</option>;
+          return <MenuItem value={year}>{year}</MenuItem>;
         })}
-      </select>
-      년
-      <select
+      </Select>
+      <FormLabel style={{ padding: "3px" }}>년</FormLabel>
+      <Select
+        size="small"
         onChange={(e) => setState({ ...state, month: Number(e.target.value) })}
         value={state.month}
       >
         {_.range(1, 13).map((month) => {
-          return <option value={month}>{month}</option>;
+          return <MenuItem value={month}>{month}</MenuItem>;
         })}
-      </select>
-      월
+      </Select>
+      <FormLabel style={{ padding: "3px" }}>월</FormLabel>
     </span>
   );
 };
