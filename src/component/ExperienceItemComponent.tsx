@@ -24,10 +24,10 @@ export const ExperienceItemComponent = (props: {
         size="small"
         style={{ padding: "3px", width: "5%" }}
       />
-      <Typography variant="body1" style={{ width: "40%" }}>
+      <Typography variant="body1" style={{ width: "35%" }}>
         {texts.join(" - ")}
       </Typography>
-      <Typography variant="body1" style={{ width: "35%" }}>
+      <Typography variant="body1" style={{ width: "40%" }}>
         {item.company}
       </Typography>
       {item.duplicate > 0 && (
