@@ -1,8 +1,7 @@
-import {
-  BasicExperienceItem,
-  ExperienceItem,
-  YearMonth,
-} from "../service/experience-item.interface";
+import { BasicExperienceItem } from "../domain/BasicExperienceItem";
+import { ExperienceItem } from "../domain/ExperienceItem";
+import { YearMonth } from "../domain/YearMonth";
+
 function diffTwoYearMonth(yearMonthStart: YearMonth, yearMonthEnd: YearMonth) {
   return (
     yearMonthEnd.year * 12 +

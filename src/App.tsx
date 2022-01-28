@@ -3,12 +3,10 @@ import "./App.css";
 import { ChromeRepository } from "./repository/chrome.repository";
 import { ExperienceItemService } from "./service/experience-item.service";
 import { MockChromeRepository } from "./repository/mock-chrome.repository";
-import {
-  BasicExperienceItem,
-  ExperienceItem,
-} from "./service/experience-item.interface";
 import { experienceItemMapper } from "./helper/experience-item-mapper";
 import { YearMonthInput } from "./component/YearMonthInput";
+import { ExperienceItem } from "./domain/ExperienceItem";
+import { BasicExperienceItem } from "./domain/BasicExperienceItem";
 
 const ExperienceItemComponent = (props: {
   experienceItem: ExperienceItem;

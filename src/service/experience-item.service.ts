@@ -1,10 +1,6 @@
 import { IChromeRepository } from "./chrome.interface";
 import { v4 as uuidv4 } from "uuid";
-import {
-  YearMonth,
-  ExperienceItem,
-  BasicExperienceItem,
-} from "./experience-item.interface";
+import { BasicExperienceItem } from "../domain/BasicExperienceItem";
 function uniqueize(ls: string[]) {
   const st = new Set();
   const res = [];

@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
-import { YearMonth } from "../service/experience-item.interface";
+
 import _ from "lodash";
+import { YearMonth } from "../domain/YearMonth";
 
 export const YearMonthInput = ({
   onChange,
