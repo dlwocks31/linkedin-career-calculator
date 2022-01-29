@@ -7,11 +7,9 @@ import { ExperienceItemService } from "../service/experience-item.service";
 export const ExperienceItemSetter = ({
   setBasicExperienceItems,
   setWarningMessage,
-  clearAlertMessage,
 }: {
   setBasicExperienceItems: (items: BasicExperienceItem[]) => void;
   setWarningMessage: (message: string) => void;
-  clearAlertMessage: () => void;
 }) => {
   const getListOfExpItem = async () => {
     const service = new ExperienceItemService(new ChromeRepository());
@@ -29,7 +27,7 @@ export const ExperienceItemSetter = ({
 
   const clearListOfExpItem = () => {
     setBasicExperienceItems([]);
-    clearAlertMessage();
+    setWarningMessage("");
   };
 
   const isTesting = false;

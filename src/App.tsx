@@ -3,7 +3,7 @@ import "./App.css";
 import { experienceItemMapper } from "./helper/experience-item-mapper";
 import { BasicExperienceItem } from "./domain/BasicExperienceItem";
 import { BasicExperienceItemInput } from "./component/BasicExperienceInput";
-import { Divider } from "@mui/material";
+import { AlertColor, Divider } from "@mui/material";
 
 import { ExperienceItemComponent } from "./component/ExperienceItemComponent";
 import { ExperienceItemSetter } from "./component/ExperienceItemSetter";
@@ -29,7 +29,11 @@ const App = () => {
     });
     setBasicExperienceItems(newList);
   }
+  const clearAlertMessage = () =>
+    setAlertMessage({ ...alertMessage, message: "" });
 
+  const setAlertMessageOrClear = (message: string, severity: AlertColor) =>
+    message ? setAlertMessage({ message, severity }) : clearAlertMessage();
   return (
     <div className="App">
       <CollaspingAlert
@@ -40,10 +44,7 @@ const App = () => {
       <ExperienceItemSetter
         setBasicExperienceItems={setBasicExperienceItems}
         setWarningMessage={(message) =>
-          message && setAlertMessage({ message, severity: "warning" })
-        }
-        clearAlertMessage={() =>
-          setAlertMessage({ ...alertMessage, message: "" })
+          setAlertMessageOrClear(message, "warning")
         }
       />
       <BasicExperienceItemInput
@@ -51,9 +52,7 @@ const App = () => {
           experienceItem &&
           setBasicExperienceItems([experienceItem, ...basicExperienceItems])
         }
-        setErrorMessage={(message) =>
-          message && setAlertMessage({ message, severity: "error" })
-        }
+        setErrorMessage={(message) => setAlertMessageOrClear(message, "error")}
       />
       <ExperienceSummaryComponent
         listOfExperienceItem={experienceItemMapper(basicExperienceItems)}
