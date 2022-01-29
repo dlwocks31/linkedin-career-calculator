@@ -7,8 +7,10 @@ import { YearMonthPairInput } from "./YearMonthPairInput";
 
 export const BasicExperienceItemInput = ({
   onSubmit,
+  setErrorMessage,
 }: {
   onSubmit: (v: BasicExperienceItem | null) => void;
+  setErrorMessage: (msg: string) => void;
 }) => {
   const [state, setState] = useState<{
     start: YearMonth;
@@ -25,7 +27,7 @@ export const BasicExperienceItemInput = ({
       start.year > end.year ||
       (start.year === end.year && start.month > end.month)
     ) {
-      alert("시작일이 종료일보다 늦습니다.");
+      setErrorMessage("시작일이 종료일보다 늦습니다.");
       return;
     }
     onSubmit({ ...state, uuid: v4(), isUsed: true });

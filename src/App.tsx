@@ -4,15 +4,19 @@ import { experienceItemMapper } from "./helper/experience-item-mapper";
 import { BasicExperienceItem } from "./domain/BasicExperienceItem";
 import { BasicExperienceItemInput } from "./component/BasicExperienceInput";
 import { Divider } from "@mui/material";
+
 import { ExperienceItemComponent } from "./component/ExperienceItemComponent";
 import { ExperienceItemSetter } from "./component/ExperienceItemSetter";
 import { ExperienceSummaryComponent } from "./component/ExperienceSummaryComponent";
+import { CollaspingAlert } from "./component/CollaspingAlert";
 
 const App = () => {
   const [basicExperienceItems, setBasicExperienceItems] = useState<
     BasicExperienceItem[]
   >([]);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [warningMe]
   function handleToggleIsUsed(uuid: string) {
     const newList = basicExperienceItems.map((item) => {
       if (item.uuid === uuid) {
@@ -25,12 +29,19 @@ const App = () => {
 
   return (
     <div className="App">
+      <CollaspingAlert
+        message={errorMessage}
+        severity="error"
+        onClose={() => setErrorMessage("")}
+      />
+
       <ExperienceItemSetter setBasicExperienceItems={setBasicExperienceItems} />
       <BasicExperienceItemInput
         onSubmit={(experienceItem) =>
           experienceItem &&
           setBasicExperienceItems([experienceItem, ...basicExperienceItems])
         }
+        setErrorMessage={setErrorMessage}
       />
       <ExperienceSummaryComponent
         listOfExperienceItem={experienceItemMapper(basicExperienceItems)}
