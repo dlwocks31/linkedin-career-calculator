@@ -15,8 +15,9 @@ export class ChromeRepository implements IChromeRepository {
         chrome.tabs.sendMessage(tabId, message, (response = null) => {
           if (!response) {
             reject(chrome.runtime.lastError);
+          } else {
+            resolve(response.data);
           }
-          resolve(response.data);
         });
       });
     });
