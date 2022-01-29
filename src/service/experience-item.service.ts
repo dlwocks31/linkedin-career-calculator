@@ -51,32 +51,45 @@ export class ExperienceItemService {
     experienceItems: BasicExperienceItem[];
     warnings: string[];
   }> {
-    const basicDataArray: BasicExperienceItem[] = [];
-    const spanTexts = await this.chromeRepository.getAllSpanText();
-    const uniqueSpanTexts = uniqueize(spanTexts);
-    for (const [i, text] of uniqueSpanTexts.entries()) {
-      const result = parseAsDuration(text);
-      if (result) {
-        const { start, end } = result;
-        basicDataArray.push({
-          start,
-          end,
-          company: uniqueSpanTexts[i - 1],
-          uuid: uuidv4(),
-          isUsed: true,
-        });
+    try {
+      const experienceItems: BasicExperienceItem[] = [];
+      const spanTexts = await this.chromeRepository.getAllSpanText();
+      const uniqueSpanTexts = uniqueize(spanTexts);
+      for (const [i, text] of uniqueSpanTexts.entries()) {
+        const result = parseAsDuration(text);
+        if (result) {
+          const { start, end } = result;
+          experienceItems.push({
+            start,
+            end,
+            company: uniqueSpanTexts[i - 1],
+            uuid: uuidv4(),
+            isUsed: true,
+          });
+        }
       }
-    }
-    const hasMoreExperience = uniqueSpanTexts.some((text) =>
-      text.includes("직책 모두 보기"),
-    );
-    return {
-      experienceItems: basicDataArray,
-      warnings: hasMoreExperience
+      const warnMoreExperience = uniqueSpanTexts.some((text) =>
+        text.includes("직책 모두 보기"),
+      );
+      const warnNoExperience = experienceItems.length === 0;
+      const warnings = warnMoreExperience
         ? [
             '이 페이지에는 누락된 직책이 존재합니다. "직책 모두 보기" 버튼을 클릭해 모든 직책을 확인해 주세요.',
           ]
-        : [],
-    };
+        : warnNoExperience
+        ? ["이 페이지에서 경력사항을 감지하지 못했습니다."]
+        : [];
+      return {
+        experienceItems,
+        warnings,
+      };
+    } catch (e) {
+      return {
+        experienceItems: [],
+        warnings: [
+          "데이터를 가져오는 데 실패했습니다. 링크드인 페이지가 맞는지 확인해 주세요.",
+        ],
+      };
+    }
   }
 }

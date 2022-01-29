@@ -3,7 +3,7 @@ import "./App.css";
 import { experienceItemMapper } from "./helper/experience-item-mapper";
 import { BasicExperienceItem } from "./domain/BasicExperienceItem";
 import { BasicExperienceItemInput } from "./component/BasicExperienceInput";
-import { AlertColor, Divider } from "@mui/material";
+import { Divider } from "@mui/material";
 
 import { ExperienceItemComponent } from "./component/ExperienceItemComponent";
 import { ExperienceItemSetter } from "./component/ExperienceItemSetter";

@@ -9,10 +9,13 @@ export class ChromeRepository implements IChromeRepository {
       active: true,
       currentWindow: true,
     };
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       chrome.tabs.query(queryInfo, (tabs) => {
         const tabId: number = tabs[0].id as number;
-        chrome.tabs.sendMessage(tabId, message, (response) => {
+        chrome.tabs.sendMessage(tabId, message, (response = null) => {
+          if (!response) {
+            reject(chrome.runtime.lastError);
+          }
           resolve(response.data);
         });
       });
