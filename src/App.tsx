@@ -35,7 +35,7 @@ const App = () => {
       <ExperienceSummaryComponent
         listOfExperienceItem={experienceItemMapper(basicExperienceItems)}
       />
-      <Divider style={{ width: "100%", padding: "10px" }} />
+      <Divider style={{ width: "100%", marginBottom: "5px" }} />
       {experienceItemMapper(basicExperienceItems).map((item) => (
         <ExperienceItemComponent
           experienceItem={item}
