@@ -3,7 +3,7 @@ import { ExperienceItem } from "../domain/ExperienceItem";
 
 export const ExperienceItemComponent = (props: {
   experienceItem: ExperienceItem;
-  toggleIsUsed: () => void;
+  toggleIsUsed: (uuid: string) => void;
 }) => {
   const item = props.experienceItem;
   const texts = [
@@ -20,7 +20,7 @@ export const ExperienceItemComponent = (props: {
     >
       <Checkbox
         checked={item.isUsed}
-        onClick={props.toggleIsUsed}
+        onClick={() => props.toggleIsUsed(item.uuid)}
         size="small"
         style={{ padding: "3px", width: "5%" }}
       />
