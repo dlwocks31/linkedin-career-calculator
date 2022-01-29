@@ -47,7 +47,10 @@ function parseAsDuration(text: string) {
 export class ExperienceItemService {
   constructor(private chromeRepository: IChromeRepository) {}
 
-  async getExperienceItems(): Promise<BasicExperienceItem[]> {
+  async getExperienceItems(): Promise<{
+    experienceItems: BasicExperienceItem[];
+    warnings: string[];
+  }> {
     const basicDataArray: BasicExperienceItem[] = [];
     const spanTexts = await this.chromeRepository.getAllSpanText();
     const uniqueSpanTexts = uniqueize(spanTexts);
@@ -64,6 +67,16 @@ export class ExperienceItemService {
         });
       }
     }
-    return basicDataArray;
+    const hasMoreExperience = uniqueSpanTexts.some((text) =>
+      text.includes("직책 모두 보기"),
+    );
+    return {
+      experienceItems: basicDataArray,
+      warnings: hasMoreExperience
+        ? [
+            '이 페이지에는 누락된 직책이 존재합니다. "직책 모두 보기" 버튼을 클릭해 모든 직책을 확인해 주세요.',
+          ]
+        : [],
+    };
   }
 }

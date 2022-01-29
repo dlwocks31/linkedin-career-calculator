@@ -1,26 +1,29 @@
 import { Alert, AlertColor, Box, Collapse, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { AlertMessage } from "../domain/AlertMessage";
 export const CollaspingAlert = ({
-  message,
-  severity,
-  onClose,
+  alertMessage,
+  setAlertMessage,
 }: {
-  message: string;
-  severity: AlertColor;
-  onClose: () => void;
+  alertMessage: AlertMessage;
+  setAlertMessage: (v: AlertMessage) => void;
 }) => {
   return (
-    <Box sx={{ width: "100%", margin: "3px 0" }}>
-      <Collapse in={!!message}>
+    <Box sx={{ width: "100%", margin: !!alertMessage ? "5px 0" : "0" }}>
+      <Collapse in={!!alertMessage.message}>
         <Alert
-          severity={severity}
+          severity={alertMessage.severity}
           action={
-            <IconButton aria-label="close" size="small" onClick={onClose}>
+            <IconButton
+              aria-label="close"
+              size="small"
+              onClick={() => setAlertMessage({ ...alertMessage, message: "" })}
+            >
               <CloseIcon></CloseIcon>
             </IconButton>
           }
         >
-          {message}
+          {alertMessage?.message}
         </Alert>
       </Collapse>
     </Box>

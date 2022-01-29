@@ -6,20 +6,31 @@ import { ExperienceItemService } from "../service/experience-item.service";
 
 export const ExperienceItemSetter = ({
   setBasicExperienceItems,
+  setWarningMessage,
+  clearAlertMessage,
 }: {
   setBasicExperienceItems: (items: BasicExperienceItem[]) => void;
+  setWarningMessage: (message: string) => void;
+  clearAlertMessage: () => void;
 }) => {
   const getListOfExpItem = async () => {
     const service = new ExperienceItemService(new ChromeRepository());
-    setBasicExperienceItems(await service.getExperienceItems());
+    const result = await service.getExperienceItems();
+    setBasicExperienceItems(result.experienceItems);
+    setWarningMessage(result.warnings.join("\n"));
   };
 
   const getListOfMockExpItem = async () => {
     const service = new ExperienceItemService(new MockChromeRepository());
-    setBasicExperienceItems(await service.getExperienceItems());
+    const result = await service.getExperienceItems();
+    setBasicExperienceItems(result.experienceItems);
+    setWarningMessage(result.warnings.join("\n"));
   };
 
-  const clearListOfExpItem = () => setBasicExperienceItems([]);
+  const clearListOfExpItem = () => {
+    setBasicExperienceItems([]);
+    clearAlertMessage();
+  };
 
   const isTesting = false;
 

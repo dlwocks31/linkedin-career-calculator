@@ -32,6 +32,7 @@ export const BasicExperienceItemInput = ({
     }
     onSubmit({ ...state, uuid: v4(), isUsed: true });
     setState({ ...state, company: "" });
+    setErrorMessage("");
   };
   return (
     <div style={{ display: "flex", padding: "10px" }}>
