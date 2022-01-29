@@ -26,7 +26,11 @@ export const YearMonthInput = ({
         value={state.year}
       >
         {_.range(new Date().getFullYear(), 1959, -1).map((year) => {
-          return <MenuItem value={year}>{year}</MenuItem>;
+          return (
+            <MenuItem key={year} value={year}>
+              {year}
+            </MenuItem>
+          );
         })}
       </Select>
       <FormLabel style={{ padding: "3px" }}>년</FormLabel>
@@ -36,7 +40,11 @@ export const YearMonthInput = ({
         value={state.month}
       >
         {_.range(1, 13).map((month) => {
-          return <MenuItem value={month}>{month}</MenuItem>;
+          return (
+            <MenuItem key={month} value={month}>
+              {month}
+            </MenuItem>
+          );
         })}
       </Select>
       <FormLabel style={{ padding: "3px" }}>월</FormLabel>
